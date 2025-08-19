@@ -44,4 +44,4 @@ class Image(models.Model):
     images = models.ImageField(verbose_name='Изображение', null=True)
 
     def __str__(self):
-        return f'{self.place.id} {self.place.title}'
+        return f'{self.id} {self.place.title}'
