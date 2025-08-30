@@ -8,7 +8,7 @@ from places import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('places', views.index),
-    path('places/<int:place_id>/', views.show_place, name='shoe_place'),
+    path('places/<int:place_id>/', views.show_place, name='show_place'),
 ] + static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT
