@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 
 
 class Place(models.Model):
@@ -31,7 +32,7 @@ class Place(models.Model):
 
     def __str__(self):
         return self.title
-
+    
 
 class Image(models.Model):
     place = models.ForeignKey(
@@ -45,6 +46,13 @@ class Image(models.Model):
         verbose_name='Изображение',
         null=True
         )
+    order = models.IntegerField(
+        verbose_name='Позиция',
+        default=0
+        )
+
+    class Meta:
+        ordering = ['order']
 
     def __str__(self):
-        return f'{self.id} {self.place.title}'
+        return f'{self.order} {self.place.title}'
