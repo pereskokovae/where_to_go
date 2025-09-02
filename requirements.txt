@@ -1,1 +1,4 @@
 Django~=5.1.2
+python-dotenv==1.1.1
+django-admin-sortable2==2.2.8
+django-tinymce==4.1.0
