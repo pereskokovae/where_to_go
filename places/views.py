@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404
 from places.models import Place
 from django.http import JsonResponse
 from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
 
 
 def index(request):
