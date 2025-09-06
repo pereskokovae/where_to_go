@@ -17,8 +17,8 @@ class Command(BaseCommand):
 
         place, created = Place.objects.get_or_create(
             title=data_js.get('title'),
-            description_long=data_js.get('description_long'),
-            description_short=data_js.get('description_short'),
+            long_description=data_js.get('description_long'),
+            short_description=data_js.get('description_short'),
             lat=data_js['coordinates']['lat'],
             lng=data_js['coordinates']['lng'],
             )

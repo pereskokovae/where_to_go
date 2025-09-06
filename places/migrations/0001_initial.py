@@ -16,10 +16,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(db_index=True, max_length=100, verbose_name='Название места')),
-                ('description_short', models.TextField(null=True, verbose_name='Краткое описание')),
-                ('description_long', models.TextField(blank=True, null=True, verbose_name='Описание')),
-                ('lng', models.DecimalField(decimal_places=20, max_digits=18, null=True, verbose_name='Долгота')),
-                ('lat', models.DecimalField(decimal_places=20, max_digits=18, null=True, verbose_name='Широта')),
+                ('short_description', models.TextField(blank=True, verbose_name='Краткое описание')),
+                ('long_description', models.TextField(blank=True, verbose_name='Описание')),
+                ('lng', models.DecimalField(decimal_places=20, max_digits=18, verbose_name='Долгота')),
+                ('lat', models.DecimalField(decimal_places=20, max_digits=18, verbose_name='Широта')),
             ],
         ),
     ]

@@ -6,32 +6,31 @@ class Place(models.Model):
     title = models.CharField(
         verbose_name='Название места',
         max_length=100,
-        db_index=True
         )
-    description_short = models.TextField(
+    short_description = models.TextField(
         verbose_name='Краткое описание',
-        null=True
+        blank=True
         )
-    description_long = HTMLField(
+    long_description = HTMLField(
         verbose_name='Описание',
-        blank=True,
-        null=True
+        blank=True
         )
     lng = models.DecimalField(
         verbose_name='Долгота',
         max_digits=20,
         decimal_places=18,
-        null=True
         )
     lat = models.DecimalField(
         verbose_name='Широта',
         max_digits=20,
         decimal_places=18,
-        null=True
         )
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        indexes = [models.Index(fields=['title'])]
 
 
 class Image(models.Model):
@@ -43,8 +42,7 @@ class Image(models.Model):
         db_index=True
         )
     images = models.ImageField(
-        verbose_name='Изображение',
-        null=True
+        verbose_name='Изображение'
         )
     order = models.IntegerField(
         verbose_name='Позиция',
@@ -54,6 +52,7 @@ class Image(models.Model):
     class Meta:
         ordering = ['order']
         unique_together = [['place', 'order']]
+        indexes = [models.Index(fields=['order'])]
 
     def __str__(self):
         return f'{self.order} {self.place.title}'

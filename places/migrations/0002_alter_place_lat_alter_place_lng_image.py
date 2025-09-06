@@ -17,7 +17,6 @@ class Migration(migrations.Migration):
             field=models.DecimalField(
                 decimal_places=18,
                 max_digits=20,
-                null=True,
                 verbose_name='Широта'
                 ),
         ),
@@ -27,7 +26,6 @@ class Migration(migrations.Migration):
             field=models.DecimalField(
                 decimal_places=18,
                 max_digits=20,
-                null=True,
                 verbose_name='Долгота'
                 ),
         ),
@@ -41,7 +39,6 @@ class Migration(migrations.Migration):
                     verbose_name='ID'
                     )),
                 ('images', models.ImageField(
-                    null=True,
                     upload_to='',
                     verbose_name='Изображение'
                     )),
