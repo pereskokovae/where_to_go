@@ -4,54 +4,52 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 
 
-def index(request):
-    geojson_data = []
-    places = Place.objects.all()
-    for place in places:
-        latitude = place.lat
-        longitude = place.lng
-        title = place.title
-        geojson_data.append({
-            "type": "FeatureCollection",
-            "features": [
-                {
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [longitude, latitude]
-                        },
-                    "properties": {
-                        "title": title,
-                        "placeId": place.id,
-                        "detailsUrl": reverse("show_place", args=[place.id])
+def serialize_geojson(place):
+    return {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [place.lng, place.lat]
+                    },
+                "properties": {
+                    "title": place.title,
+                    "placeId": place.id,
+                    "detailsUrl": reverse("show_place", args=[place.id])
                     }
                 }
             ]
-            })
-    context = {"geojson_data": geojson_data}
+        }
+
+
+def index(request):
+    places = Place.objects.prefetch_related('images')
+    context = {"geojson_data": serialize_geojson(place) for place in places}
 
     return render(request, "index.html", context)
 
 
 def show_place(requests, place_id):
-    place = get_object_or_404(Place, id=place_id)
+    place = get_object_or_404(
+        Place.objects.prefetch_related('images'),
+        id=place_id
+        )
+    
     urls_image = []
+    for image in place.images.all():
+        urls_image.append(image.images.url) if place.images else None
 
-    if place.images:
-        for image in place.images.all():
-            urls_image.append(image.images.url)
-    else:
-        urls_image.append("There is no photo for this location.")
-
-    coordinates_place = {
+    place_coordinates = {
         "lng": place.lng,
         "lat": place.lat
     }
-    adress_place = {
+    serialize_place = {
         "title": place.title,
         "imgs": urls_image,
         "description_short": place.short_description,
         "description_long": place.long_description,
-        "coordinstes": coordinates_place
+        "coordinstes": place_coordinates
     }
-    return JsonResponse(adress_place)
+    return JsonResponse(serialize_place)
