@@ -35,6 +35,9 @@ ALLOWED_HOSTS=['127.0.0.1', 'localhost']
 Если ключ утечёт, злоумышленник сможет подделать данные.
 [Подробнее](https://docs.djangoproject.com/en/5.2/topics/signing/)
 
+- ALLOWED_HOSTS -- это список доменных имен, для которых ваш сайт может работать, 
+и это важная мера безопасности для защиты от атак, когда злоумышленник пытается направить ваш сайт на свой домен. [Подробнее](https://docs.djangoproject.com/en/5.2/ref/settings/#allowed-hosts)
+
 5. Примените миграции.
 ```bash
 python manage.py migrate
@@ -45,10 +48,10 @@ python manage.py runserver
 ```
 [Откройте](http://127.0.0.1:8000/places)
 ### Загрузка места через терминал
-Вы можете добавить новое место в базу данных прямо через терминал.
+Вы можете добавить новое место в базу данных прямо через терминал. Вместо этого адреса вы можете поставить свой.
 ```bash
-python manage.py load_place --url http://адрес/файла.json
+python manage.py load_place --url https://github.com/devmanorg/where-to-go-places/blob/master/places/%D0%94%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD-%D0%BA%D0%B2%D0%B0%D1%80%D1%82%D0%B0%D0%BB%20%D0%A4%D0%BB%D0%B0%D0%BA%D0%BE%D0%BD.json
 ```
-
+Адреса можно найти [Здесь](https://github.com/devmanorg/where-to-go-places) в папке `places`. Просто выберите файл, откройте его на отдельной странице и нажмите кнопку Raw. Так вы получите ссылку на исходный код файла.
 ### Пример того, как должна выглядит карта:
 <img width="1536" height="955" alt="image" src="https://github.com/user-attachments/assets/3f9af98c-113b-4cb9-be82-fa82e30a6a78" />
