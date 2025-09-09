@@ -6,6 +6,7 @@ class Place(models.Model):
     title = models.CharField(
         verbose_name='Название места',
         max_length=100,
+        unique=True
         )
     short_description = models.TextField(
         verbose_name='Краткое описание',
@@ -39,7 +40,6 @@ class Image(models.Model):
         on_delete=models.CASCADE,
         related_name="images",
         verbose_name='Место',
-        db_index=True
         )
     images = models.ImageField(
         verbose_name='Изображение'
