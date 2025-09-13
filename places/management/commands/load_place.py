@@ -1,9 +1,11 @@
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
-from places.models import Place
+from places.models import Place, Image
 
 import requests
 import time
+
+ERROR_SLEEP_TIME = 60
 
 
 class Command(BaseCommand):
@@ -12,42 +14,47 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         url = options['url']
         try:
-            raw_js = requests.get(url).json()
+            payload = requests.get(url).json()
         except requests.exceptions.HTTPError as e:
             print(f"HTTP Error occurred: {e}")
-            time.sleep(60)
+            time.sleep(ERROR_SLEEP_TIME)
         except requests.exceptions.ConnectionError as e:
             print(f"Connection Error: {e}")
-            time.sleep(60)
+            time.sleep(ERROR_SLEEP_TIME)
 
         place, created = Place.objects.get_or_create(
-            title=raw_js.get('title'))
-   
-        if created:
-            Place.objects.update_or_create(
-                long_description=raw_js.get('description_long'),
-                short_description=raw_js.get('description_short'),
-                lat=raw_js['coordinates']['lat'],
-                lng=raw_js['coordinates']['lng'],
-                )
+            title=payload.get('title'),
+            defaults={
+                'long_description': payload.get('description_long'),
+                'short_description': payload.get('description_short'),
+                'lat': payload['coordinates']['lat'],
+                'lng': payload['coordinates']['lng'],
+            }
+        )
 
-        urls_image = raw_js.get('imgs')
+        urls_image = payload.get('imgs')
         if urls_image:
             try:
                 for order, image_url in enumerate(urls_image, start=1):
                     image = requests.get(image_url).content
                     content = ContentFile(image, f'{order}.jpg')
-                    place.images.create(
-                        images=content,
-                        order=order,
+
+                    image_object, created = Image.objects.get_or_create(
+                        place=place,
                         )
+                    if created:
+                        image_object.images.save(
+                            f'{order}.jpg',
+                            content,
+                            save=True
+                            )
             except requests.exceptions.HTTPError as e:
                 print(f"HTTP Error occurred: {e}")
-                time.sleep(60)
+                time.sleep(ERROR_SLEEP_TIME)
             except requests.exceptions.ConnectionError as e:
                 print(f"Connection Error: {e}")
-                time.sleep(60)
-      
+                time.sleep(ERROR_SLEEP_TIME)
+
     def add_arguments(self, parser):
         parser.add_argument(
             '--url', dest='url', required=True,

@@ -4,30 +4,32 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 
 
-def serialize_geojson(place):
+def get_features(place):
     return {
-        "type": "FeatureCollection",
-        "features": [
-            {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [place.lng, place.lat]
-                    },
-                "properties": {
-                    "title": place.title,
-                    "placeId": place.id,
-                    "detailsUrl": reverse("show_place", args=[place.id])
-                    }
-                }
-            ]
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [float(place.lng), float(place.lat)]
+            },
+        "properties": {
+            "title": place.title,
+            "placeId": place.id,
+            "detailsUrl": reverse("show_place", args=[place.id])
         }
+    }
+
+
+def serialized_geojson():
+    places = Place.objects.prefetch_related('images')
+    geojson = {
+        "type": "FeatureCollection",
+        "features": [get_features(place) for place in places]
+    }
+    return geojson
 
 
 def index(request):
-    places = Place.objects.prefetch_related('images')
-    context = {"geojson_data": serialize_geojson(place) for place in places}
-
+    context = {'geojson_data': serialized_geojson()}
     return render(request, "index.html", context)
 
 
@@ -36,20 +38,20 @@ def show_place(requests, place_id):
         Place.objects.prefetch_related('images'),
         id=place_id
         )
-    
-    urls_image = []
-    for image in place.images.all():
-        urls_image.append(image.images.url) if place.images else None
+
+    urls_image = [
+        image.images.url for image in place.images.all()
+        ] if place.images else None
 
     place_coordinates = {
         "lng": place.lng,
         "lat": place.lat
     }
-    serialize_place = {
+    serialized_place = {
         "title": place.title,
         "imgs": urls_image,
         "description_short": place.short_description,
         "description_long": place.long_description,
         "coordinstes": place_coordinates
     }
-    return JsonResponse(serialize_place)
+    return JsonResponse(serialized_place)
