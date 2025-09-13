@@ -50,8 +50,26 @@ python manage.py runserver
 ### Загрузка места через терминал
 Вы можете добавить новое место в базу данных прямо через терминал. Вместо этого адреса вы можете поставить свой.
 ```bash
-python manage.py load_place --url https://github.com/devmanorg/where-to-go-places/blob/master/places/%D0%94%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD-%D0%BA%D0%B2%D0%B0%D1%80%D1%82%D0%B0%D0%BB%20%D0%A4%D0%BB%D0%B0%D0%BA%D0%BE%D0%BD.json
+python manage.py load_place --url https://raw.githubusercontent.com/devmanorg/where-to-go-places/refs/heads/master/places/%D0%9F%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%D0%BA%D0%B0%20%D0%B4%D0%BB%D1%8F%20%D1%81%D0%B2%D0%B8%D0%B4%D0%B0%D0%BD%D0%B8%D0%B9%20%D0%BD%D0%B0%2060-%D0%BC%20%D1%8D%D1%82%D0%B0%D0%B6%D0%B5%20%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0-%D0%A1%D0%B8%D1%82%D0%B8.json
 ```
-Адреса можно найти [Здесь](https://github.com/devmanorg/where-to-go-places) в папке `places`. Просто выберите файл, откройте его на отдельной странице и нажмите кнопку Raw. Так вы получите ссылку на исходный код файла.
+Источник данных для адресов должен быть записан c подробными сведениями о локации. В поле `'imgs'` прикреплены ссылки на картинки, которые должны быть в формате `.jpg`.
+Формат должен быть такой:
+```javascript
+{
+    "title": "Экскурсионный проект «Крыши24.рф»",
+    "imgs": [
+        "https://kudago.com/media/images/place/d0/f6/d0f665a80d1d8d110826ba797569df02.jpg",
+        "https://kudago.com/media/images/place/66/23/6623e6c8e93727c9b0bb198972d9e9fa.jpg",
+        "https://kudago.com/media/images/place/64/82/64827b20010de8430bfc4fb14e786c19.jpg",
+    ],
+    "description_short": "Хотите увидеть Москву с высоты птичьего полёта?",
+    "description_long": "<p>Проект «Крыши24.рф» проводит экскурсии ...</p>",
+    "coordinates": {
+        "lat": 55.753676,
+        "lng": 37.64
+    }
+}
+```
+
 ### Пример того, как должна выглядит карта:
 <img width="1536" height="955" alt="image" src="https://github.com/user-attachments/assets/3f9af98c-113b-4cb9-be82-fa82e30a6a78" />
