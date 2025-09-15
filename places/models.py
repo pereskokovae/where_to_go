@@ -41,7 +41,7 @@ class Image(models.Model):
         related_name="images",
         verbose_name='Место',
         )
-    images = models.ImageField(
+    image = models.ImageField(
         verbose_name='Изображение'
         )
     order = models.IntegerField(

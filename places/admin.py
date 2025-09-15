@@ -7,14 +7,14 @@ from django.utils.safestring import mark_safe
 
 class StackedInlineImage(SortableStackedInline):
     model = Image
-    fields = ['images', 'get_preview', 'order']
+    fields = ['image', 'get_preview', 'order']
     readonly_fields = ['get_preview']
 
     def get_preview(self, obj):
-        if obj.images:
+        if obj.image:
             return format_html(
                 "<img src='{}' style='max-height:200px; max-width:300px' />",
-                mark_safe(obj.images.url)
+                mark_safe(obj.image.url)
                 )
 
 
@@ -24,6 +24,5 @@ class ImageAdmin(admin.ModelAdmin):
 
 
 @admin.register(Place)
-class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
+class SortablePlaceAdmin(SortableAdminBase, admin.ModelAdmin):
     inlines = [StackedInlineImage]
-

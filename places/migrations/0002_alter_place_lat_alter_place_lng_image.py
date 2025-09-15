@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                     serialize=False,
                     verbose_name='ID'
                     )),
-                ('images', models.ImageField(
+                ('image', models.ImageField(
                     upload_to='',
                     verbose_name='Изображение'
                     )),
