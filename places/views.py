@@ -19,7 +19,7 @@ def get_features(place):
     }
 
 
-def serialized_geojson():
+def get_serialized_geojson():
     places = Place.objects.prefetch_related('images')
     geojson = {
         "type": "FeatureCollection",
@@ -29,7 +29,7 @@ def serialized_geojson():
 
 
 def index(request):
-    context = {'geojson_data': serialized_geojson()}
+    context = {'geojson_data': get_serialized_geojson()}
     return render(request, "index.html", context)
 
 
@@ -40,8 +40,8 @@ def show_place(requests, place_id):
         )
 
     urls_image = [
-        image.images.url for image in place.images.all()
-        ] if place.images else None
+        image.image.url for image in place.image.all()
+        ] if place.image else None
 
     place_coordinates = {
         "lng": place.lng,
