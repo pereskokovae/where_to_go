@@ -4,6 +4,7 @@ from places.models import Place, Image
 
 import requests
 import time
+import logging
 
 ERROR_SLEEP_TIME = 60
 
@@ -14,7 +15,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         url = options['url']
         try:
-            payload = requests.get(url).json()
+            response = requests.get(url)
+            response.raise_for_status()
+            payload = response.json()
+
             place, created = Place.objects.get_or_create(
                 title=payload.get('title'),
                 defaults={
@@ -28,24 +32,27 @@ class Command(BaseCommand):
             urls_image = payload.get('imgs', [])
             if payload.get('imgs'):
                 for order, image_url in enumerate(urls_image, start=1):
-                    image = requests.get(image_url).content
-                    content = ContentFile(image, f'{order}.jpg')
+                    try:
+                        image = requests.get(image_url).content
+                        content = ContentFile(image, f'{order}.jpg')
 
-                    image_object, created = Image.objects.get_or_create(
-                        place=place,
-                        order=order
-                        )
-                    if created:
-                        image_object.image.save(
-                            f'{order}.jpg',
-                            content,
-                            save=True
+                        image_object, created = Image.objects.get_or_create(
+                            place=place,
+                            image=content,
+                            order=order
                             )
+                        if not created:
+                            print(f"The image {image_object} has already been added")
+
+                    except requests.exceptions.RequestException as e:
+                        logging.error(f'Error loading image {image_url}: {e}')
+                        time.sleep(ERROR_SLEEP_TIME)
+
         except requests.exceptions.HTTPError as e:
-            print(f"HTTP Error occurred: {e}")
+            logging.error(f"HTTP Error occurred: {e}")
             time.sleep(ERROR_SLEEP_TIME)
         except requests.exceptions.ConnectionError as e:
-            print(f"Connection Error: {e}")
+            logging.error(f"Connection Error: {e}")
             time.sleep(ERROR_SLEEP_TIME)
 
     def add_arguments(self, parser):
