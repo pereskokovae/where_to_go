@@ -257,7 +257,6 @@
       sidebarApp.loadingPlaceId = placeId;
 
       try {
-        let detailsUrl = '{% static "places/moscow_legends.json" %}'
         let response = await fetch(detailsUrl);
 
         if (!response.ok){

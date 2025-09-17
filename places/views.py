@@ -40,8 +40,8 @@ def show_place(requests, place_id):
         )
 
     urls_image = [
-        image.image.url for image in place.image.all()
-        ] if place.image else None
+        image.image.url for image in place.images.all()
+        ] if place.images else None
 
     place_coordinates = {
         "lng": place.lng,
