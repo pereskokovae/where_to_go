@@ -46,13 +46,13 @@ class Image(models.Model):
         )
     order = models.IntegerField(
         verbose_name='Позиция',
-        default=0
+        default=0,
+        blank=True
         )
 
     class Meta:
         ordering = ['order']
-        unique_together = [['place', 'order']]
         indexes = [models.Index(fields=['order'])]
 
     def __str__(self):
-        return f'{self.order} {self.place.title}'
+        return f'{self.id} {self.place.title}'
